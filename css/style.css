@@ -1497,5 +1497,35 @@ footer p {
     padding: 5px 15px;
   }
 }
-
+.error-handel:before{
+  bottom: -30px;
+  display: table;
+  height: 35px;
+  left: 15px;
+  margin: auto 0;
+  position: absolute;
+  text-align: left;
+  width: 100%
+}
+#success, #error {
+  display: none;
+  line-height: 34px
+}
+.contact_message .error{
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+#success, #error {
+  display: none;
+  line-height: 34px
+}
+#success {
+  color: #31bb15
+}
+.contact_message .error{
+  font-weight: 300;
+  font-size: 13px;
+  margin-bottom: 0;
+}
 /*# sourceMappingURL=style.css.map */

@@ -198,40 +198,149 @@ $(window).on("load",function (){
 
     });
 
+//=========================================================================================
+//  11.   Contact Form Validation
+//=========================================================================================
 
-    // contact form validator
-    $('#contact-form').validator();
-
-    $('#contact-form').on('submit', function (e) {
-        if (!e.isDefaultPrevented()) {
-            var url = "http://www.innovationplans.com/idesign/coco3/contact.php";
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $(this).serialize(),
-                success: function (data)
-                {
-                    var messageAlert = 'alert-' + data.type;
-                    var messageText = data.message;
-
-                    var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
-                    if (messageAlert && messageText) {
-                        $('#contact-form').find('.messages').html(alertBox);
-                        $('#contact-form')[0].reset();
-                    }
-                }
-            });
-            return false;
+if( $('#contact-form').length){
+    $('#contact-form').validate({  //#contact-form contact form id
+      rules: {
+        name: {
+          required: true    // Field name here
+        },
+        email: {
+          required: true, // Field name here
+          email: true
+        },
+        subject: {
+          required: true
+        },
+        message: {
+          required: true
         }
+      },
+      
+      messages: {
+                name: "Please enter your Name", //Write here your error message that you want to show in contact form
+                email: "Please enter valid Email", //Write here your error message that you want to show in contact form
+                subject: "Please enter your Subject", //Write here your error message that you want to show in contact form
+                message: "Please write your Message" //Write here your error message that you want to show in contact form
+            },
+
+            submitHandler: function (form) {
+                $('#send').attr({ 'disabled': 'true', 'value': 'Sending...' });
+                sendEmail(form);
+                //$.ajax({
+                //    type: "POST",
+                //    url: "email.php",
+                //    data: $(form).serialize(),
+                //    success: function () {
+                //        $('#send').removeAttr('disabled').attr('value', 'Send');
+                //        $( "#success").slideDown( "slow" );
+                //        setTimeout(function() {
+                //        $( "#success").slideUp( "slow" );
+                //        }, 5000);
+                //        form.reset();
+                //    },
+                //    error: function() {
+                //        $('#send').removeAttr('disabled').attr('value', 'Send');
+                //        $( "#error").slideDown( "slow" );
+                //        setTimeout(function() {
+                //        $( "#error").slideUp( "slow" );
+                //        }, 5000);
+                //    }
+                //});
+                return false; // required to block normal submit since you used ajax
+            }
+
     });
+  }
+
+    // // contact form validator
+    // $('#contact-form').validator();
+
+    // $('#contact-form').on('submit', function (e) {
+    //     if (!e.isDefaultPrevented()) {
+    //         var url = "http://www.innovationplans.com/idesign/coco3/contact.php";
+
+    //         $.ajax({
+    //             type: "POST",
+    //             url: url,
+    //             data: $(this).serialize(),
+    //             success: function (data)
+    //             {
+    //                 var messageAlert = 'alert-' + data.type;
+    //                 var messageText = data.message;
+
+    //                 var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
+    //                 if (messageAlert && messageText) {
+    //                     $('#contact-form').find('.messages').html(alertBox);
+    //                     $('#contact-form')[0].reset();
+    //                 }
+    //             }
+    //         });
+    //         return false;
+    //     }
+    // });
 
 });
 
+function sendEmail(form) {
+    var data = $(form).serialize();
+    
+    Email.send({
+        Host: "smtp.elasticemail.com",
+        Username: "softwarepramukh@gmail.com",
+        Password: "9CE4E3AE68825885215244F53C80E1251493",
+        To: 'info@pramukhsoftware.com',
+        From: "softwarepramukh@gmail.com",
+        Subject: "Enquiry on Pramukh Software site",
+        Body: deparam(data)
+    }).then(
+        function (x) {
+            if (x == "OK") {
 
+                $('#send').removeAttr('disabled').attr('value', 'Send');
+                $("#success").slideDown("slow");
+                setTimeout(function () {
+                    $("#success").slideUp("slow");
+                }, 5000);
+                form.reset();
+
+            }
+            else {
+                $('#send').removeAttr('disabled').attr('value', 'Send');
+                $("#error").slideDown("slow");
+                setTimeout(function () {
+                    $("#error").slideUp("slow");
+                }, 5000);
+            }
+
+        }
+    );
+}
+
+function deparam(query) {
+    var pairs, i, keyValuePair, key, value, map = {};
+    // remove leading question mark if its there
+    if (query.slice(0, 1) === '?') {
+        query = query.slice(1);
+    }
+    if (query !== '') {
+        pairs = query.split('&');
+        for (i = 0; i < pairs.length; i += 1) {
+            keyValuePair = pairs[i].split('=');
+            key = decodeURIComponent(keyValuePair[0]);
+            value = (keyValuePair.length > 1) ? decodeURIComponent(keyValuePair[1]) : undefined;
+            map[key] = value;
+        }
+    }
+    return map;
+}
 // Slider 
 $(document).ready(function() {
 
+    
     var owl = $('.header .owl-carousel');
 
 
